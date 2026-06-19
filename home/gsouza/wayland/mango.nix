@@ -53,6 +53,8 @@
     # Window Rules for Named Scratchpads
     windowrule=isnamedscratchpad:1,width:1600,height:900,appid:kitty-drop
     windowrule=isnamedscratchpad:1,width:1400,height:800,appid:btop-scratch
+    windowrule=isnamedscratchpad:1,width:1600,height:900,appid:keyhints-scratch
+    windowrule=isnamedscratchpad:1,width:1600,height:900,appid:aliashints-scratch
 
     # Base Bindings
     bind=SUPER,Return,spawn_shell,kitty --title Kitty
@@ -71,8 +73,8 @@
     bind=SUPER,F2,spawn_shell,noctalia msg mic-mute
 
     # Help Cheatsheets & Window Info
-    bind=SUPER,h,spawn_shell,kitty --class floating-keyhints -e ~/.config/mango/scripts/KeyHints.sh
-    bind=SUPER+SHIFT,h,spawn_shell,kitty --class floating-keyhints -e ~/.config/mango/scripts/AliasHints.sh
+    bind=SUPER,h,toggle_named_scratchpad,keyhints-scratch,none,kitty --class keyhints-scratch -e ~/.config/mango/scripts/KeyHints.sh
+    bind=SUPER+SHIFT,h,toggle_named_scratchpad,aliashints-scratch,none,kitty --class aliashints-scratch -e ~/.config/mango/scripts/AliasHints.sh
     bind=SUPER+SHIFT,d,spawn_shell,~/.config/mango/scripts/WindowInfo.sh
 
     # Hardware & Media Keys
