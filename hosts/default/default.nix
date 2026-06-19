@@ -25,7 +25,13 @@
   nixpkgs.config.allowUnfree = true;
 
   # 2. Bootloader
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub = {
+    enable = true;
+    device = "nodev";
+    efiSupport = true;
+    useOSProber = true;
+  };
   boot.loader.efi.canTouchEfiVariables = true;
 
   # 3. Networking & Locale
