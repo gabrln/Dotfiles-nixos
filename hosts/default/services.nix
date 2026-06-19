@@ -13,6 +13,7 @@
 
   # Hardware & Services required by Noctalia / Wayland
   hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = false;
   services.upower.enable = true;
   services.power-profiles-daemon.enable = true;
   services.gnome.gnome-keyring.enable = true;
