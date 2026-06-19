@@ -12,7 +12,16 @@
     experimental-features = [ "nix-command" "flakes" ];
     extra-substituters = [ "https://noctalia.cachix.org" ];
     extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+    auto-optimise-store = true;
   };
+
+  # Coleta de lixo automática (limpeza de disco)
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
   nixpkgs.config.allowUnfree = true;
 
   # 2. Bootloader
