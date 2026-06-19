@@ -7,7 +7,6 @@
     ./starship.nix
     ./yazi.nix
     ./zellij.nix
-    ./fastfetch.nix
     ./nvim.nix
   ];
 }
