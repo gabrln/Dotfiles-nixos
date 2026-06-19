@@ -23,6 +23,11 @@
     blur_params_contrast=0.9
     blur_params_saturation=1.0
 
+    # Animations
+    animations=1
+    animation_duration=150
+    animation_curve=0.25,0.1,0.25,1.0
+
     shadows=1
     layer_shadows=0
     shadow_only_floating=1
