@@ -14,7 +14,7 @@
     };
     settings = {
       background_opacity = "0.9";
-      window_padding_width = 14;
+      window_padding_width = 6;
       hide_window_decorations = "yes";
       confirm_os_window_close = 0;
       cursor_shape = "beam";
