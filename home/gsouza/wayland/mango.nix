@@ -48,6 +48,10 @@
     exec-once=noctalia
     exec-once=wl-paste --watch cliphist store
 
+    # Window Rules for Named Scratchpads
+    windowrule=isnamedscratchpad:1,width:1600,height:900,appid:kitty-drop
+    windowrule=isnamedscratchpad:1,width:1400,height:800,appid:btop-scratch
+
     # Base Bindings
     bind=SUPER,Return,spawn_shell,kitty --title Kitty
     bind=SUPER,b,spawn_shell,firefox
@@ -97,7 +101,16 @@
     bind=SUPER,r,reload_config
     bind=SUPER,j,focusstack,next
     bind=SUPER,k,focusstack,prev
-    bind=ALT,z,toggle_scratchpad
+
+    # Scratchpads (Espelhados do hyprland.lua)
+    # Named Scratchpads (Dropdown Terminal & System Monitor)
+    bind=SUPER SHIFT,Return,toggle_named_scratchpad,kitty-drop,none,kitty --class kitty-drop
+    bind=SUPER,F1,toggle_named_scratchpad,btop-scratch,none,kitty --class btop-scratch -e btop
+
+    # Standard Scratchpad (Equivalente ao special:magic)
+    bind=SUPER,u,toggle_scratchpad
+    bind=SUPER SHIFT,u,minimized
+    bind=SUPER CTRL,u,restore_minimized
 
     # Foco direcional
     bind=SUPER,Left,focusdir,left
