@@ -22,6 +22,11 @@
   # 3. Networking & Locale
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
+  networking.nameservers = [ "1.1.1.1" ];
+  services.resolved = {
+    enable = true;
+    settings.Resolve.FallbackDNS = "8.8.8.8";
+  };
 
   time.timeZone = "America/Sao_Paulo";
 

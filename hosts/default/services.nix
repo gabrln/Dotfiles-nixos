@@ -17,12 +17,22 @@
   services.power-profiles-daemon.enable = true;
   services.gnome.gnome-keyring.enable = true;
 
-  # Greetd Login Manager with Noctalia Greeter (running inside Cage kiosk)
+  # Noctalia Greeter configuration via NixOS module
+  programs.noctalia-greeter = {
+    enable = true;
+    package = inputs.noctalia-greeter.packages.${pkgs.system}.default;
+    settings.cursor = {
+      theme = "Bibata-Modern-Classic";
+      size = 24;
+      package = pkgs.bibata-cursors;
+    };
+  };
+
+  # Greetd Login Manager
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.cage}/bin/cage -s -m last -- ${inputs.noctalia-greeter.packages.${pkgs.system}.default}/bin/noctalia-greeter-session";
         user = "greeter";
       };
     };

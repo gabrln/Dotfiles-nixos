@@ -44,6 +44,7 @@
         modules = [
           ./hosts/default/default.nix
           mango.nixosModules.mango
+          noctalia-greeter.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
