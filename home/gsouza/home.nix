@@ -21,7 +21,15 @@
     mpv          # Media Player
     file-roller  # Archive Manager
     rclone       # Cloud Sync
-    protonup-qt  # Manage Proton-GE versions
+    (pkgs.symlinkJoin {
+      name = "protonup-qt-wrapped";
+      paths = [ pkgs.protonup-qt ];
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/protonup-qt \
+          --set QT_QPA_PLATFORMTHEME xdgdesktopportal
+      '';
+    }) # Manage Proton-GE versions
     prismlauncher # Minecraft launcher
     spotify      # Spotify client
     nautilus     # File Manager (GUI)
