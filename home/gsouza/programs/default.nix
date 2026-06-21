@@ -7,5 +7,6 @@
     ./yazi.nix
     ./zellij.nix
     ./nvim.nix
+    ./git.nix
   ];
 }

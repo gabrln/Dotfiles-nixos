@@ -57,6 +57,7 @@
     env=XCURSOR_THEME,Bibata-Modern-Classic
     env=XCURSOR_SIZE,24
     env=XKB_DEFAULT_LAYOUT,br
+    env=QT_QPA_PLATFORMTHEME,qt6ct
 
     # Input: Mouse
     cursor_theme=Bibata-Modern-Classic
@@ -71,6 +72,7 @@
     exec-once=gnome-keyring-daemon --start --components=secrets
     exec-once=noctalia
     exec-once=wl-paste --watch cliphist store
+    exec-once=flatpak run com.github.wwmm.easyeffects --gapplication-service
 
     # Window Rules for Named Scratchpads
     windowrule=isnamedscratchpad:1,width:1600,height:900,appid:kitty-drop

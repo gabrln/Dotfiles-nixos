@@ -1,8 +1,8 @@
 { config, pkgs, inputs, ... }:
 
 {
-  # Bloqueio de memória RAM física ilimitada para o grupo de áudio
-  # Evita que buffers de áudio sofram paginação para o disco
+  # Unlimited physical memory locking for the audio group
+  # Prevents audio buffers from being paged to disk
   security.pam.loginLimits = [
     {
       domain = "@audio";
@@ -12,7 +12,7 @@
     }
   ];
 
-  # Audio (Pipewire com customização de baixa latência e correção de estalos)
+  # Audio (Pipewire with low latency tuning and click fix)
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -22,7 +22,7 @@
     jack.enable = true;
 
     extraConfig = {
-      # Clocks fixos e buffer seguro de latência (~5ms)
+      # Fixed clocks and safe latency buffer (~5ms)
       pipewire."10-clock" = {
         "context.properties" = {
           "default.clock.rate" = 48000;
@@ -31,7 +31,7 @@
           "default.clock.max-quantum" = 1024;
         };
       };
-      # Correção de stutters e engasgos de áudio Pulse emulado via Wine/Proton em jogos
+      # Fix for stutters and audio glitches in emulated PulseAudio via Wine/Proton in games
       pipewire-pulse."10-stutters-fix" = {
         "pulse.properties" = {
           "pulse.default.req" = "256/48000";
@@ -42,7 +42,7 @@
       };
     };
 
-    # Desativa suspensão das saídas físicas para remover estalos (pops) de ativação
+    # Disable physical output suspension to remove activation pops
     wireplumber.extraConfig."51-disable-suspension" = {
       "monitor.alsa.rules" = [
         {
@@ -66,38 +66,38 @@
     };
   };
 
-  # EarlyOOM Daemon para mitigar travamentos repentinos por consumo alto de RAM
+  # EarlyOOM Daemon to mitigate sudden freezes due to high RAM usage
   services.earlyoom = {
     enable = true;
-    freeMemThreshold = 5; # Executa SIGKILL se RAM livre cair abaixo de 5%
+    freeMemThreshold = 5; # Run SIGKILL if free RAM drops below 5%
     enableNotifications = true;
   };
 
-  # Limitação de logs do Journald para evitar desgaste de escrita desnecessária no SSD
+  # Limit Journald log size to prevent unnecessary writes on SSD
   services.journald.extraConfig = ''
     SystemMaxUse=50M
   '';
 
-  # SSD TRIM automático
+  # Automatic SSD TRIM
   services.fstrim.enable = true;
 
-  # Limites e Timeouts do Systemd para evitar desligamentos lentos (máximo 10s)
+  # Systemd limits and timeouts to avoid slow shutdowns (max 10s)
   systemd.settings.Manager = {
     DefaultTimeoutStartSec = "15s";
     DefaultTimeoutStopSec = "10s";
   };
 
-  # Hardware & Services requeridos pelo Noctalia / Wayland
+  # Hardware & Services required by Noctalia / Wayland
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = false;
   services.upower.enable = true;
   services.power-profiles-daemon.enable = true;
   services.gnome.gnome-keyring.enable = true;
 
-  # Habilita suporte a Flatpak para o Bazaar e outros instaladores
+  # Enable Flatpak support for Bazaar and other installers
   services.flatpak.enable = true;
 
-  # Adiciona repositório Flathub e configura permissões de temas para Flatpak
+  # Add Flathub repository and configure theme permissions for Flatpak
   systemd.services.configure-flathub = {
     description = "Configurar repositório Flathub e overrides de tema para o Flatpak";
     wantedBy = [ "multi-user.target" ];
@@ -160,7 +160,7 @@
     };
   };
 
-  # Auto-unlock GNOME Keyring no login via greetd
+  # Auto-unlock GNOME Keyring at login via greetd
   security.pam.services.greetd.enableGnomeKeyring = true;
 
   # XDG Portals

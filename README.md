@@ -1,111 +1,140 @@
-# NixOS Config (MangoWM + Noctalia)
+# Configuração Declarativa NixOS (MangoWM + Noctalia)
 
-Esta é a configuração declarativa do NixOS para o usuário `gsouza`, integrando o compositor **MangoWM** e o ambiente gráfico **Noctalia Shell**.
+Este repositório contém a configuração declarativa do sistema operacional NixOS para o usuário gsouza, estruturada utilizando Nix Flakes e Home Manager. A interface gráfica é composta pelo compositor MangoWM e pela suite Noctalia Shell.
 
----
-
-## 🚀 Estrutura de Ramificações (Branches)
-
-Este repositório é gerenciado através de duas ramificações principais no Git:
-*   **`main` (Estável):** Contém a configuração de base estável do sistema.
-*   **`experimental` (Desenvolvimento/Performance):** Contém otimizações agressivas de desempenho de kernel, áudio de baixíssima latência (Pro-Audio), virtualização via Podman, regras administrativas do Sudo sem senha e drivers de vídeo avançados.
-
----
-
-## 📂 Estrutura do Repositório
+## Estrutura do Repositório
 
 ```text
 nixos-config/
-├── flake.nix                       # Entrada do Nix Flake com canais (26.05) e inputs
-├── flake.lock                      # Travamento de versões exatas dos canais e flakes
-├── README.md                       # Documentação do sistema
+├── flake.nix                       # Ponto de entrada do Nix Flake com canais (26.05) e inputs
+├── flake.lock                      # Travamento de versões exatas de dependências externas
+├── README.md                       # Guia técnico de instalação e arquitetura
 ├── hosts/
-│   └── default/                    # Configurações em nível de sistema (Root/NixOS)
+│   └── default/                    # Configurações a nível de sistema (Root/System)
 │       ├── default.nix             # Entrada do host (ZRAM, Kernel sysctl, GC, Sudo, Locales)
-│       ├── hardware-configuration.nix # Mapeamento físico dos discos (gerado pelo sistema)
-│       ├── services.nix            # Pipewire, greetd, earlyoom, pam limits, bluetooth, etc.
-│       ├── packages.nix            # Pacotes de sistema (systemPackages globais)
-│       ├── intel-gpu.nix           # Módulo isolado de drivers e aceleração gráfica Intel
-│       └── podman.nix              # Módulo de virtualização e compatibilidade Docker
+│       ├── hardware-configuration.nix # Mapeamento de hardware gerado pelo instalador do NixOS
+│       ├── services.nix            # Pipewire, greetd, earlyoom, pam limits, bluetooth
+│       ├── packages.nix            # Pacotes de sistema globais
+│       ├── intel-gpu.nix           # Drivers e aceleração de vídeo Intel Iris Xe
+│       └── podman.nix              # Virtualização de contêineres compatível com Docker
 └── home/
-    └── gsouza/                     # Configurações em nível de usuário (Home Manager)
-        ├── home.nix                # Entrada do Home Manager (MIME Apps, Variáveis de Sessão)
-        ├── programs/               # Módulos de aplicativos e TUIs
-        │   ├── default.nix         # Importações dos sub-módulos de programas
-        │   ├── kitty.nix           # Terminal Kitty (Fonte JetBrainsMono 10.5)
-        │   ├── zsh.nix             # Zsh aliases, keybindings e integração FZF/zvm
-        │   ├── yazi.nix            # Yazi File Manager (com bindings de backspace e flavor Noctalia)
-        │   ├── nvim.nix            # Editor Neovim (básico via initLua + clipboard)
-        │   └── zellij.nix          # Multiplexador Zellij
-        └── wayland/                # Módulos gráficos do compositor
-            ├── default.nix         # Importador gráfico
-            ├── mango.nix           # Configuração de atalhos e comp. do MangoWM
-            └── noctalia.nix        # Shell e painel dinâmico do Noctalia
+    └── gsouza/                     # Configurações a nível de usuário (Home Manager)
+        ├── home.nix                # Entrada do Home Manager (Temas, MIME Apps, ativações)
+        ├── programs/               # Módulos de programas de terminal e editores
+        │   ├── default.nix         # Importações do diretório de programas
+        │   ├── kitty.nix           # Emulador de terminal Kitty
+        │   ├── zsh.nix             # Configuração do Zsh, aliases e FZF
+        │   ├── yazi.nix            # Gerenciador de arquivos de terminal Yazi
+        │   ├── nvim.nix            # Configuração do Neovim (Nixvim sem autocompletar popups)
+        │   └── zellij.nix          # Multiplexador de terminal Zellij
+        └── wayland/                # Módulos do servidor gráfico
+            ├── default.nix         # Importações de Wayland
+            ├── mango.nix           # Configuração de atalhos e regras do MangoWM
+            └── noctalia.nix        # Integração do shell e painéis do Noctalia
 ```
+
+## Requisitos de Hardware e Otimizações
+
+A configuração está otimizada para o processador Intel com placa integrada Iris Xe Graphics e 16GB de memória RAM:
+1. **Vídeo (Intel Iris Xe):** Carregamento precoce do driver de kernel `i915` no initrd para evitar cintilação da tela. Utilização do driver `intel-media-driver` (iHD) para decodificação em hardware e definição de variáveis do Vulkan (`VK_ICD_FILENAMES`).
+2. **Memória e ZRAM:** Compactação agressiva via ZRAM habilitada como swap principal. Parâmetros de kernel `vm.swappiness = 100`, `vm.watermark_boost_factor = 0` e `vm.page-cluster = 0` para evitar gargalos de escrita e leitura em SSD.
+3. **Áudio de Baixa Latência (Pro-Audio):** Limites de RAM (`memlock`) configurados como ilimitados para o grupo `audio`. Pipewire configurado com relógio de 48kHz e tamanho de bloco (quantum) estável de 256 amostras (latência de ~5.3ms). Wireplumber com suspensão automática de ALSA e Bluetooth desativada.
+4. **Virtualização:** Podman habilitado com socket de emulação do Docker para compatibilidade transparente com Devcontainers e ferramentas Docker originais.
+
+## Guia de Instalação em Nova Máquina
+
+Siga os passos abaixo para implantar esta configuração a partir de uma instalação limpa utilizando a imagem ISO do NixOS.
+
+### 1. Preparação e Particionamento
+
+Dê boot na máquina utilizando o instalador do NixOS. Execute o particionamento utilizando `gdisk` ou `parted`.
+O esquema recomendado utiliza Btrfs sobre GPT:
+*   `/dev/sdX1`: EFI System Partition (mínimo 512MB, formatada em FAT32/vfat).
+*   `/dev/sdX2`: Partição Root (formatada em Btrfs).
+
+Crie os subvolumes Btrfs desejados (exemplo: `root`, `home`, `nix`):
+```bash
+mount /dev/sdX2 /mnt
+btrfs subvolume create /mnt/root
+btrfs subvolume create /mnt/home
+btrfs subvolume create /mnt/nix
+umount /mnt
+```
+
+Monte os subvolumes na estrutura de instalação:
+```bash
+mount -o subvol=root,compress=zstd,noatime /dev/sdX2 /mnt
+mkdir -p /mnt/boot /mnt/home /mnt/nix
+mount /dev/sdX1 /mnt/boot
+mount -o subvol=home,compress=zstd,noatime /dev/sdX2 /mnt/home
+mount -o subvol=nix,compress=zstd,noatime /dev/sdX2 /mnt/nix
+```
+
+### 2. Geração da Configuração de Hardware
+
+Gere a configuração física da máquina sob o diretório temporário:
+```bash
+nixos-generate-config --root /mnt
+```
+Isso criará os arquivos `/mnt/etc/nixos/configuration.nix` e `/mnt/etc/nixos/hardware-configuration.nix`.
+
+### 3. Clonar a Configuração Declarativa
+
+Clone este repositório para o diretório de destino do usuário Gabriel:
+```bash
+nix-shell -p git
+git clone https://github.com/gsouza/nixos-config.git /mnt/home/gsouza/.config/nixos
+```
+
+Substitua o arquivo de hardware do repositório pelo arquivo gerado pelo instalador na etapa anterior:
+```bash
+cp /mnt/etc/nixos/hardware-configuration.nix /mnt/home/gsouza/.config/nixos/hosts/default/hardware-configuration.nix
+```
+
+### 4. Executar a Instalação Inicial
+
+Navegue até o diretório da configuração e execute o comando de instalação apontando para a flake `nixos`:
+```bash
+cd /mnt/home/gsouza/.config/nixos
+nixos-install --flake .#nixos
+```
+
+Ao finalizar, defina a senha do usuário `gsouza` quando solicitado, remova a mídia de boot e reinicie a máquina.
 
 ---
 
-## ⚙️ Otimizações Aplicadas (Branch `experimental`)
+## Gerenciamento e Reconstrução (Switch)
 
-### 1. Desempenho e Drivers de Vídeo (GPU Intel Iris Xe)
-*   **Carregamento de Kernel Precoce:** Adicionado driver `i915` ao `boot.initrd.kernelModules` para ativação direta no stage 1, eliminando cintilações no Wayland.
-*   **Drivers Modernos:** Uso exclusivo do `intel-media-driver` (iHD) para decodificação em hardware em Tiger Lake (Gen 12), removendo o driver legado `intel-vaapi-driver` que induzia falhas de decodificação.
-*   **Forçamento Vulkan:** Definição da variável de ambiente global `VK_ICD_FILENAMES` apontando para o arquivo ICD oficial da Intel.
+Após a inicialização do sistema, todas as modificações nas configurações devem ser realizadas no repositório local e aplicadas utilizando os comandos Nix Flake.
 
-### 2. Estabilidade e Paginação de Memória (ZRAM + earlyoom)
-*   **ZRAM Swap:** Compactação em RAM ativa para aliviar estresse em sistemas de 16GB.
-*   **Kernel Tweaks:** Configurado `vm.swappiness = 100` para forçar o kernel a compactar no ZRAM preferencialmente em vez de ejetar o cache de disco (evitando travamentos de sistema de arquivos) e desativado *watermark boost* para mitigar stutters de I/O.
-*   **EarlyOOM Daemon:** Configurado para encerrar processos em consumo crítico (RAM livre < 5%) com alertas gráficos visíveis.
+### Branches do Repositório
+*   `main`: Contém a ramificação com componentes base estáveis.
+*   `experimental`: Contém melhorias de desempenho de latência de kernel, otimizações de vídeo, regras NOPASSWD de sudo e virtualização avançada.
 
-### 3. Áudio de Baixa Latência & Estabilidade (Pipewire + Wireplumber)
-*   **PAM Limits (Pro-Audio):** Permissão de bloqueio físico ilimitado de memória RAM (`memlock = unlimited`) para o grupo de áudio.
-*   **Configurações do Pipewire:** Quantum estável fixado em `256/48000` (latência de ~5ms) no relógio e na emulação do PulseAudio (resolvendo cliques/estalos sonoros em jogos via Proton/Wine).
-*   **Desativação de Suspensão:** Dispositivos ALSA e Bluetooth configurados para não entrarem em suspensão temporária no Wireplumber.
+### Comandos de Administração
 
-### 4. Virtualização (Podman + Socket API)
-*   Substituição do Docker pelo **Podman** de maneira limpa.
-*   Habilitação de `dockerCompat = true` e `dockerSocket.enable = true` para garantir que o socket local interaja transparentemente com ferramentas que requerem a API Docker original (como extensões Devcontainers no VSCode).
-
-### 5. Conveniência Administrativa (Sudo NOPASSWD)
-*   Regras de Sudo flexibilizadas especificamente para o grupo `wheel` nos comandos de energia e discos: `shutdown`, `reboot`, `poweroff`, `mount` e `umount`.
-
----
-
-## 🛠️ Como Implantar e Reconstruir
-
-Como as configurações utilizam **Nix Flakes**, todos os arquivos criados ou modificados **devem ser rastreados pelo Git** antes de acionar a reconstrução, sob o risco do Nix ignorar as mudanças.
-
-### 1. Clonar ou Acessar o Repositório
-```bash
-cd /home/gsouza/.config/nixos
-```
-
-### 2. Selecionar a Branch Desejada
-*   **Para a versão estável:**
+1.  **Navegar ao repositório:**
     ```bash
-    git checkout main
-    ```
-*   **Para a versão experimental (otimizada):**
-    ```bash
-    git checkout experimental
+    cd ~/.config/nixos
     ```
 
-### 3. Rastrear Alterações no Git
-A cada nova alteração ou arquivo criado:
-```bash
-git add .
-```
+2.  **Rastrear arquivos no Git:**
+    O Nix Flake ignora qualquer arquivo que não esteja rastreado pelo Git. Antes de tentar reconstruir, adicione novos arquivos ou modificações:
+    ```bash
+    git add -A
+    ```
 
-### 4. Reconstruir e Aplicar as Configurações
-*   **Validar Sintaxe (Sem aplicar alterações):**
+3.  **Validar sintaxe (Dry run / Flake check):**
     ```bash
     nix flake check --accept-flake-config
     ```
-*   **Aplicar e Tornar Padrão no Próximo Boot:**
+
+4.  **Aplicar configurações e atualizar inicializador (Rebuild Switch):**
     ```bash
-    sudo nixos-rebuild switch --flake .#default --accept-flake-config
+    nh os switch
     ```
-*   **Apenas Testar (Sem adicionar ao menu do GRUB):**
+
+5.  **Testar alterações temporariamente (Sem gravar no menu de boot):**
     ```bash
-    sudo nixos-rebuild test --flake .#default --accept-flake-config
+    nh os test
     ```

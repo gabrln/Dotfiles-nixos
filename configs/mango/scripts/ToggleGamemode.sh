@@ -37,7 +37,7 @@ if [[ "$CURRENT_ANIMATIONS" == "1" ]]; then
   set_val "gappoh" "0"
   set_val "gappov" "0"
   mmsg dispatch reload_config
-  notify-send 'Modo Jogo Ativado' 'Animações, blur, sombras e espaçamentos desativados.' -t 2000
+  notify-send -a "Sistema" 'Modo Jogo Ativado' 'Animações, blur, sombras e espaçamentos desativados.' -t 2000
 else
   set_val "animations" "1"
   set_val "blur" "1"
@@ -47,6 +47,6 @@ else
   set_val "gappoh" "5"
   set_val "gappov" "5"
   mmsg dispatch reload_config
-  notify-send 'Modo Jogo Desativado' 'Configurações restauradas.' -t 2000
+  notify-send -a "Sistema" 'Modo Jogo Desativado' 'Configurações restauradas.' -t 2000
 fi
 

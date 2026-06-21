@@ -21,20 +21,20 @@
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
     ];
     auto-optimise-store = true;
-    # Aumenta o tamanho do buffer de download para evitar timeouts (512 MB)
+    # Increase the download buffer size to avoid timeouts (512 MB)
     download-buffer-size = 536870912;
   };
 
-  # Automatic garbage collection
+  # Automatic garbage collection (disabled to avoid conflict with nh.clean)
   nix.gc = {
-    automatic = true;
+    automatic = false;
     dates = "weekly";
     options = "--delete-older-than 7d";
   };
 
   nixpkgs.config.allowUnfree = true;
 
-  # 2. Bootloader e Configurações de Latência do Kernel
+  # 2. Bootloader and Kernel Latency Settings
   boot = {
     loader.systemd-boot.enable = false;
     loader.grub = {
@@ -45,31 +45,31 @@
     };
     loader.efi.canTouchEfiVariables = true;
 
-    # Limpa arquivos temporários no SSD a cada inicialização
+    # Clean temporary files from the SSD on every boot
     tmp.cleanOnBoot = true;
 
-    # Carrega o driver i2c-dev para permitir controle de brilho via ddcutil
+    # Load the i2c-dev driver to allow brightness control via ddcutil
     kernelModules = [ "i2c-dev" ];
 
-    # Ajustes de baixa latência e prioridade para RAM/Kernel
+    # Low latency and priority adjustments for RAM/Kernel
     kernel.sysctl = {
-      # swappiness de 100 força a compactação no ZRAM em vez de ejetar o cache de páginas do FS
+      # Swappiness of 100 forces compression in ZRAM instead of ejecting page cache from the FS
       "vm.swappiness" = 100;
-      # Desativa watermark boost para mitigar stutters de I/O em picos de alocação de memória
+      # Disable watermark boost to mitigate I/O stutters during memory allocation peaks
       "vm.watermark_boost_factor" = 0;
       "vm.watermark_scale_factor" = 125;
-      # Evita pré-alocação agressiva de swap (otimização ZRAM)
+      # Prevent aggressive swap pre-allocation (ZRAM optimization)
       "vm.page-cluster" = 0;
     };
   };
 
-  # Ativa swap compactada na RAM (ZRAM)
+  # Enable compressed swap in RAM (ZRAM)
   zramSwap.enable = true;
 
-  # Habilita o barramento I2C para controle de hardware do monitor
+  # Enable the I2C bus for monitor hardware control
   hardware.i2c.enable = true;
 
-  # Regras Administrativas de Sudo sem Senha (NOPASSWD) para comandos básicos
+  # Passwordless sudo rules (NOPASSWD) for basic system commands
   security.sudo = {
     enable = true;
     extraRules = [
@@ -142,6 +142,14 @@
 
   # Enable XWayland support
   programs.xwayland.enable = true;
+
+  # Enable nh (Nix Helper) for cleaner and faster rebuilds/Garbage Collection
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 7d --keep 3";
+    flake = "/home/gsouza/.config/nixos";
+  };
 
   # System state version
   system.stateVersion = "24.05";

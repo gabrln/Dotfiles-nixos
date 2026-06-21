@@ -14,7 +14,7 @@
   home.homeDirectory = "/home/gsouza";
   home.stateVersion = "24.05";
 
-  # Pacotes GUI de Usuário
+  # User GUI Packages
   home.packages = with pkgs; [
     zathura      # PDF Viewer
     swayimg      # Image Viewer Wayland
@@ -31,6 +31,37 @@
     delta        # Syntax-highlighting pager for git/diffs
     procs        # Modern replacement for ps (processes viewer)
   ];
+
+  # GTK theme configuration
+  gtk = {
+    enable = true;
+    theme = {
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    gtk4.theme = config.gtk.theme;
+  };
+
+  # Disable Home Manager management of gtk.css files to avoid conflicts with Noctalia
+  xdg.configFile."gtk-3.0/gtk.css".enable = false;
+  xdg.configFile."gtk-4.0/gtk.css".enable = false;
+
+
+  # Qt theme configuration
+  qt = {
+    enable = false;
+  };
+
+  # Dconf settings for GTK4/Adwaita preference
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
 
   # User cursor theme
   home.pointerCursor = {
@@ -95,6 +126,15 @@
     };
   };
 
+  # Expose theme and icons to Flatpak apps by symlinking them into home directory
+  home.file = {
+    ".themes/adw-gtk3-dark".source = "${pkgs.adw-gtk3}/share/themes/adw-gtk3-dark";
+    ".themes/adw-gtk3".source = "${pkgs.adw-gtk3}/share/themes/adw-gtk3";
+    ".icons/Papirus-Dark".source = "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark";
+    ".icons/Papirus".source = "${pkgs.papirus-icon-theme}/share/icons/Papirus";
+  };
+
+
   # Ensure starship.toml is writable so Noctalia can write the color palette to it
   home.activation.setupStarshipConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     config_file="$HOME/.config/starship.toml"
@@ -108,9 +148,15 @@
     fi
   '';
 
-  # Garantir a existência declarativa dos diretórios de mídias Pictures/Screenshots e Pictures/Wallpapers
+  # Declaratively ensure Pictures/Screenshots and Pictures/Wallpapers directories exist
   home.activation.createPicturesDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p "$HOME/Pictures/Screenshots"
     mkdir -p "$HOME/Pictures/Wallpapers"
   '';
+
+  # Enable direnv and nix-direnv for automatic cached development shells
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 }

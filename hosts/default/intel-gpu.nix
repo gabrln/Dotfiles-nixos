@@ -1,18 +1,17 @@
 { config, pkgs, ... }:
 
 {
-  # Força o carregamento do driver i915 no primeiro estágio do boot (stage 1)
-  # Isso previne cintilações gráficas ao carregar o MangoWM/Wayland
+  # Force loading of the i915 driver in stage 1 boot to prevent screen flickering in MangoWM/Wayland
   boot.initrd.kernelModules = [ "i915" ];
 
   hardware.graphics = {
     enable = true;
-    enable32Bit = true; # Fundamental para Steam, Wine e Proton rodarem jogos 32-bit
+    enable32Bit = true; # Required for Steam, Wine, and Proton to run 32-bit games
     extraPackages = with pkgs; [
-      intel-media-driver   # Driver iHD (decodificação de mídia moderna Gen 12)
+      intel-media-driver   # iHD driver (modern media decoding for Gen 12)
       libva-vdpau-driver
-      libvdpau-va-gl       # Ponte de compatibilidade VDPAU para VAAPI
-      vpl-gpu-rt           # Runtime OneVPL para processamento gráfico em Gen 12+
+      libvdpau-va-gl       # VDPAU to VAAPI compatibility bridge
+      vpl-gpu-rt           # OneVPL GPU runtime for processing on Gen 12+
     ];
     extraPackages32 = with pkgs.driversi686Linux; [
       intel-media-driver

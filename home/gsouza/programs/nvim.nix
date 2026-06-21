@@ -7,7 +7,7 @@
     viAlias = true;
     vimAlias = true;
 
-    # Habilita suporte a clipboard do Wayland via wl-copy
+    # Enable Wayland clipboard support via wl-copy
     clipboard.providers.wl-copy.enable = true;
 
     opts = {
@@ -25,21 +25,21 @@
       termguicolors = true;
     };
 
-    # Plugins recomendados, sem autocompletar popups (no nvim-cmp)
+    # Recommended plugins, without autocomplete popups (no nvim-cmp)
     plugins = {
-      lualine.enable = true;      # Barra de status premium
-      bufferline.enable = true;   # Visualizar buffers abertos no topo
-      treesitter.enable = true;   # Destaque de sintaxe inteligente
-      telescope.enable = true;    # Localizador fuzzy de arquivos e texto
-      web-devicons.enable = true; # Ícones para a interface
-      gitsigns.enable = true;     # Indicadores de modificações git
-      which-key.enable = true;    # Dicas de comandos e atalhos na tela
-      comment.enable = true;      # Comentar/descomentar linhas rapidamente
+      lualine.enable = true;      # Premium status bar
+      bufferline.enable = true;   # View open buffers at the top
+      treesitter.enable = true;   # Smart syntax highlighting
+      telescope.enable = true;    # Fuzzy file and text finder
+      web-devicons.enable = true; # Icons for the interface
+      gitsigns.enable = true;     # Git modification indicators
+      which-key.enable = true;    # Command and shortcut hints on screen
+      comment.enable = true;      # Quickly comment/uncomment lines
       lsp = {
         enable = true;
         servers = {
-          nil_ls.enable = true;   # Language Server oficial para Nix
-          bashls.enable = true;   # Language Server para Shell/Bash
+          nil_ls.enable = true;   # Official Language Server for Nix
+          bashls.enable = true;   # Language Server for Shell/Bash
         };
       };
     };

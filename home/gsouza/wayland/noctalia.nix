@@ -33,7 +33,7 @@
     [theme.templates]
     enable_builtin_templates = true
     enable_community_templates = true
-    builtin_ids = [ "kitty", "starship" ]
+    builtin_ids = [ "kitty", "starship", "qt" ]
     community_ids = [ "yazi" ]
   '';
 

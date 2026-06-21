@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# /* ---- Custom Unified Cheat Sheet using FZF ---- */
+# Custom Unified Cheat Sheet using FZF.
 
 # Define shortcuts array
 shortcuts=(
@@ -74,8 +74,8 @@ shortcuts=(
   "[Zsh/Alias] :: reload-zsh :: Reload Zsh configuration :: source ~/.zshrc"
 
   # Nix
-  "[Nix/System] :: rebuild :: Rebuild NixOS switch :: sudo nixos-rebuild switch --flake ~/.config/nixos#default"
-  "[Nix/System] :: update :: Update Nix flake and rebuild :: nix flake update && sudo nixos-rebuild switch --flake ~/.config/nixos#default"
+  "[Nix/System] :: rebuild :: Rebuild NixOS switch :: nh os switch"
+  "[Nix/System] :: update :: Update Nix flake and rebuild :: nix flake update && nh os switch"
   "[Nix/System] :: nxi <pkg> :: Install Nix package user-profile :: nix profile install nixpkgs#<pkg>"
   "[Nix/System] :: nxu <pkg> :: Remove Nix package user-profile :: nix profile remove <pkg>"
   "[Nix/System] :: nxl :: List user-profile installed packages :: nix profile list"
@@ -127,12 +127,12 @@ if [[ -n "$selected" ]]; then
     if [[ "$selected_trimmed" == "$item_formatted"* ]]; then
       action=$(echo "$item" | awk -F ' :: ' '{print $4}')
       if [[ -n "$action" ]]; then
-        # Se for um comando nativo do Yazi, avisa
+        # Check if selected item is a native Yazi binding
         if [[ "$action" == "Yazi native" ]]; then
-          notify-send "Atalho Yazi" "Atalho nativo dentro do Yazi" -t 2000 -i dialog-information
+          notify-send -a "Sistema" "Atalho Yazi" "Atalho nativo dentro do Yazi" -t 2000 -i dialog-information
         else
           echo -n "$action" | wl-copy
-          notify-send "Atalho Copiado" "Comando '$action' copiado para o clipboard!" -t 2000 -i edit-copy
+          notify-send -a "Sistema" "Atalho Copiado" "Comando '$action' copiado para o clipboard!" -t 2000 -i edit-copy
         fi
       fi
       break
