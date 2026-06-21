@@ -1,7 +1,18 @@
 { config, pkgs, inputs, ... }:
 
 {
-  # Audio (Pipewire)
+  # Bloqueio de memória RAM física ilimitada para o grupo de áudio
+  # Evita que buffers de áudio sofram paginação para o disco
+  security.pam.loginLimits = [
+    {
+      domain = "@audio";
+      type = "-";
+      item = "memlock";
+      value = "unlimited";
+    }
+  ];
+
+  # Audio (Pipewire com customização de baixa latência e correção de estalos)
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -9,16 +20,81 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
+
+    extraConfig = {
+      # Clocks fixos e buffer seguro de latência (~5ms)
+      pipewire."10-clock" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 256;
+          "default.clock.min-quantum" = 256;
+          "default.clock.max-quantum" = 1024;
+        };
+      };
+      # Correção de stutters e engasgos de áudio Pulse emulado via Wine/Proton em jogos
+      pipewire-pulse."10-stutters-fix" = {
+        "pulse.properties" = {
+          "pulse.default.req" = "256/48000";
+          "pulse.min.req" = "256/48000";
+          "pulse.min.frag" = "256/48000";
+          "pulse.min.quantum" = "256/48000";
+        };
+      };
+    };
+
+    # Desativa suspensão das saídas físicas para remover estalos (pops) de ativação
+    wireplumber.extraConfig."51-disable-suspension" = {
+      "monitor.alsa.rules" = [
+        {
+          matches = [ { "node.name" = "~alsa_output.*"; } ];
+          actions.update-props = {
+            "session.suspend-timeout-seconds" = 0;
+          };
+        }
+      ];
+      "monitor.bluez.rules" = [
+        {
+          matches = [
+            { "node.name" = "~bluez_input.*"; }
+            { "node.name" = "~bluez_output.*"; }
+          ];
+          actions.update-props = {
+            "session.suspend-timeout-seconds" = 0;
+          };
+        }
+      ];
+    };
   };
 
-  # Hardware & Services required by Noctalia / Wayland
+  # EarlyOOM Daemon para mitigar travamentos repentinos por consumo alto de RAM
+  services.earlyoom = {
+    enable = true;
+    freeMemThreshold = 5; # Executa SIGKILL se RAM livre cair abaixo de 5%
+    enableNotifications = true;
+  };
+
+  # Limitação de logs do Journald para evitar desgaste de escrita desnecessária no SSD
+  services.journald.extraConfig = ''
+    SystemMaxUse=50M
+  '';
+
+  # SSD TRIM automático
+  services.fstrim.enable = true;
+
+  # Limites e Timeouts do Systemd para evitar desligamentos lentos (máximo 10s)
+  systemd.settings.Manager = {
+    DefaultTimeoutStartSec = "15s";
+    DefaultTimeoutStopSec = "10s";
+  };
+
+  # Hardware & Services requeridos pelo Noctalia / Wayland
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = false;
   services.upower.enable = true;
   services.power-profiles-daemon.enable = true;
   services.gnome.gnome-keyring.enable = true;
 
-  # Noctalia Greeter configuration via NixOS module
+  # Noctalia Greeter
   programs.noctalia-greeter = {
     enable = true;
     package = inputs.noctalia-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default;
@@ -51,7 +127,7 @@
     '';
   };
 
-  # Greetd Login Manager
+  # Greetd
   services.greetd = {
     enable = true;
     settings = {
@@ -61,10 +137,10 @@
     };
   };
 
-  # Auto-unlock GNOME Keyring on login via greetd
+  # Auto-unlock GNOME Keyring no login via greetd
   security.pam.services.greetd.enableGnomeKeyring = true;
 
-  # XDG Portals (required for Noctalia launcher)
+  # XDG Portals
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];

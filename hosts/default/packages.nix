@@ -44,6 +44,7 @@
     unzip
     p7zip
     unrar
+    podman-compose
   ];
 
   # Session variables for Qt themes

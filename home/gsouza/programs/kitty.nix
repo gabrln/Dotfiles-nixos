@@ -5,7 +5,7 @@
     enable = true;
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 11.0;
+      size = 10.5;
       package = pkgs.nerd-fonts.jetbrains-mono;
     };
     keybindings = {

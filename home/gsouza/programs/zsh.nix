@@ -64,10 +64,7 @@
       conf-zsh = "nvim ~/.config/nixos/home/gsouza/programs/zsh.nix";
       reload-zsh = "source ~/.zshrc && echo 'Zsh config reloaded!'";
 
-      # Docker aliases
-      dk-start = "docker-start";
-      dk-stop = "docker-stop";
-      dk-status = "docker-status";
+
 
       g = "git";
       gst = "git status -sb";
@@ -103,32 +100,7 @@
       zstyle ':completion:*' menu select
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
-      # =========================================================
-      # Docker Automation Functions from vault
-      # =========================================================
-      docker-start() {
-        sudo systemctl start docker
-        if systemctl is-active --quiet docker; then
-          notify-send "Docker" "Active" -i docker -u normal
-        else
-          notify-send "Docker" "Failed to start" -i dialog-error -u critical
-        fi
-      }
-      docker-stop() {
-        sudo systemctl stop docker
-        if ! systemctl is-active --quiet docker; then
-          notify-send "Docker" "Inactive" -i docker -u normal
-        else
-          notify-send "Docker" "Failed to stop" -i dialog-error -u critical
-        fi
-      }
-      docker-status() {
-        if systemctl is-active --quiet docker; then
-          notify-send "Docker" "Active" -i docker
-        else
-          notify-send "Docker" "Inactive" -i docker
-        fi
-      }
+
 
       # =========================================================
       # Zsh Vi Mode & Keybindings
