@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, lib, ... }:
+{ config, pkgs, inputs, lib, vars, ... }:
 
 {
   imports = [
@@ -6,12 +6,13 @@
     inputs.mango.hmModules.mango
     inputs.nixvim.homeModules.nixvim
     ./programs
+    ./programs/webapps.nix
     ./wayland
   ];
 
   # Home Manager identity
-  home.username = "gsouza";
-  home.homeDirectory = "/home/gsouza";
+  home.username = vars.userName;
+  home.homeDirectory = "/home/${vars.userName}";
   home.stateVersion = "24.05";
 
   # User GUI Packages

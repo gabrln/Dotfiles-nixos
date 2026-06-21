@@ -36,18 +36,34 @@
       url = "github:nix-community/nixvim/nixos-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Declarative partitioning and opt-in state persistence inputs
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    impermanence.url = "github:nix-community/impermanence";
   };
 
-  outputs = { self, nixpkgs, home-manager, mango, noctalia, noctalia-greeter, antigravity-nix, nixvim, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, mango, noctalia, noctalia-greeter, antigravity-nix, nixvim, disko, impermanence, ... }@inputs:
     let
       system = "x86_64-linux";
+      vars = import ./vars.nix;
       pkgs = nixpkgs.legacyPackages.${system};
     in {
-      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.${vars.hostName} = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs vars; };
         modules = [
+          disko.nixosModules.disko
           ./hosts/default/default.nix
+          ./hosts/default/disko.nix
+          ./modules/nixos/base.nix
+          ./modules/nixos/latency.nix
+          ./modules/nixos/audio.nix
+          ./modules/nixos/gpu.nix
+          ./modules/nixos/podman.nix
+          ./modules/nixos/impermanence.nix
           mango.nixosModules.mango
           noctalia-greeter.nixosModules.default
           home-manager.nixosModules.home-manager
@@ -55,8 +71,8 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";
-            home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.users.gsouza = import ./home/gsouza/home.nix;
+            home-manager.extraSpecialArgs = { inherit inputs vars; };
+            home-manager.users.${vars.userName} = import ./home/gsouza/home.nix;
           }
         ];
       };
