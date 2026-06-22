@@ -60,8 +60,8 @@
 
       # NixOS config shortcuts (adapted from vault notes)
       conf-nix = "nvim ~/.config/nixos/flake.nix";
-      conf-mango = "nvim ~/.config/nixos/home/gsouza/wayland/mango.nix";
-      conf-zsh = "nvim ~/.config/nixos/home/gsouza/programs/zsh.nix";
+      conf-mango = "nvim ~/.config/nixos/home/gabrln/wayland/mango.nix";
+      conf-zsh = "nvim ~/.config/nixos/home/gabrln/programs/zsh.nix";
       reload-zsh = "source ~/.zshrc && echo 'Zsh config reloaded!'";
 
 

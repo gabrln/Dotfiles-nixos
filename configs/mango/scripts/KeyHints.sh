@@ -68,8 +68,8 @@ shortcuts=(
 
   # Config
   "[Zsh/Alias] :: conf-nix :: Edit NixOS flake configuration :: nvim ~/.config/nixos/flake.nix"
-  "[Zsh/Alias] :: conf-mango :: Edit MangoWM configuration :: nvim ~/.config/nixos/home/gsouza/wayland/mango.nix"
-  "[Zsh/Alias] :: conf-zsh :: Edit Zsh configuration :: nvim ~/.config/nixos/home/gsouza/programs/zsh.nix"
+  "[Zsh/Alias] :: conf-mango :: Edit MangoWM configuration :: nvim ~/.config/nixos/home/gabrln/wayland/mango.nix"
+  "[Zsh/Alias] :: conf-zsh :: Edit Zsh configuration :: nvim ~/.config/nixos/home/gabrln/programs/zsh.nix"
   "[Zsh/Alias] :: conf-zj :: Edit Zellij config :: nvim ~/.config/zellij/config.kdl"
   "[Zsh/Alias] :: reload-zsh :: Reload Zsh configuration :: source ~/.zshrc"
 

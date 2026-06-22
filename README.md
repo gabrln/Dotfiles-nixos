@@ -1,6 +1,6 @@
 # Configuração Declarativa NixOS (MangoWM + Noctalia)
 
-Este repositório contém a configuração declarativa do sistema operacional NixOS para o usuário gsouza, estruturada utilizando Nix Flakes e Home Manager. A interface gráfica é composta pelo compositor MangoWM e pela suite Noctalia Shell.
+Este repositório contém a configuração declarativa do sistema operacional NixOS para o usuário gabrln, estruturada utilizando Nix Flakes e Home Manager. A interface gráfica é composta pelo compositor MangoWM e pela suite Noctalia Shell.
 
 ## Estrutura do Repositório
 
@@ -18,7 +18,7 @@ nixos-config/
 │       ├── packages.nix            # Pacotes de sistema globais
 │       └── docker.nix              # Virtualização de contêineres Docker nativo
 └── home/
-    └── gsouza/                     # Configurações a nível de usuário (Home Manager)
+    └── gabrln/                     # Configurações a nível de usuário (Home Manager)
         ├── home.nix                # Entrada do Home Manager (Temas, MIME Apps, ativações)
         ├── programs/               # Módulos de programas de terminal e editores
         │   ├── default.nix         # Importações do diretório de programas
@@ -98,7 +98,7 @@ Este é o método ideal (Método 1) e mais utilizado pela comunidade NixOS, pois
    O sistema solicitará a senha de `sudo` quando necessário para aplicar as alterações do sistema, instalará o compositor e reiniciará no seu novo ambiente.
 
    > [!IMPORTANT]
-   > A senha inicial padrão para o usuário `gsouza` está definida como `nixos`. Realize o primeiro login com ela e altere-a imediatamente executando `passwd`.
+   > A senha inicial padrão para o usuário `gabrln` está definida como `nixos`. Realize o primeiro login com ela e altere-a imediatamente executando `passwd`.
 
    Para futuras atualizações, você pode rodar o comando direto pelo Nix Helper (`nh`):
    ```bash
