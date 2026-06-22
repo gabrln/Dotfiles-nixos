@@ -27,6 +27,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # 2. Networking & Locale
+  networking.hostName = vars.hostName;
   time.timeZone = vars.timeZone;
   i18n.defaultLocale = vars.defaultLocale;
   i18n.extraLocaleSettings = {
