@@ -20,34 +20,34 @@
       options = [ "size=4G" "mode=755" ];
     };
 
-  # Subvolumes Btrfs persistentes (utilizando o UUID original)
+  # Subvolumes Btrfs persistentes montados por Label (Etiqueta)
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/fc2e1162-1baa-4ee7-828c-f9df2779ce41";
+    { device = "/dev/disk/by-label/nixos-data";
       fsType = "btrfs";
       options = [ "subvol=home" "compress=zstd" "noatime" ];
     };
 
   fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/fc2e1162-1baa-4ee7-828c-f9df2779ce41";
+    { device = "/dev/disk/by-label/nixos-data";
       fsType = "btrfs";
       options = [ "subvol=nix" "compress=zstd" "noatime" ];
     };
 
   fileSystems."/persist" =
-    { device = "/dev/disk/by-uuid/fc2e1162-1baa-4ee7-828c-f9df2779ce41";
+    { device = "/dev/disk/by-label/nixos-data";
       fsType = "btrfs";
       options = [ "subvol=persist" "compress=zstd" "noatime" ];
     };
 
   fileSystems."/var/log" =
-    { device = "/dev/disk/by-uuid/fc2e1162-1baa-4ee7-828c-f9df2779ce41";
+    { device = "/dev/disk/by-label/nixos-data";
       fsType = "btrfs";
       options = [ "subvol=log" "compress=zstd" "noatime" ];
     };
 
-  # Partição EFI de boot
+  # Partição EFI de boot montada por Label
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/A0C6-231B";
+    { device = "/dev/disk/by-label/boot";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
