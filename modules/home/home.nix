@@ -171,6 +171,11 @@
     mkdir -p "$HOME/Pictures/Wallpapers"
   '';
 
+  # Ensure obsidian vault directory exists for cloning
+  home.activation.createObsidianDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p "$HOME/Documents/obsidian"
+  '';
+
   # Enable direnv and nix-direnv for automatic cached development shells
   programs.direnv = {
     enable = true;
