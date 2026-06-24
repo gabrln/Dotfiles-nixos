@@ -7,7 +7,6 @@ ui {
         rounded_corners true
         hide_session_name false
     }
-    compact_bar true
 }
 
 // Keybinding mode: unlock first (Ctrl+g to unlock, avoids conflicts with Neovim Ctrl+p)
