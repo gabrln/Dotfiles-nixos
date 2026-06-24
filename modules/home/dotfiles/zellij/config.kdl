@@ -10,6 +10,9 @@ ui {
     compact_bar true
 }
 
+// Keybinding mode: unlock first (Ctrl+g to unlock, avoids conflicts with Neovim Ctrl+p)
+keybinds "unlock-first"
+
 // Layout
 default_layout "compact"
 default_shell "zsh"
