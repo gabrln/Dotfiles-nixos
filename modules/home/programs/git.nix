@@ -9,10 +9,14 @@
         email = "gabrln@users.noreply.github.com";
       };
       init = {
-        defaultBranch = "main";
+        defaultBranch = "experimental";
       };
       pull = {
         rebase = true;
+        ff = "only";
+      };
+      diff = {
+        algorithm = "histogram";
       };
       push = {
         autoSetupRemote = true;
