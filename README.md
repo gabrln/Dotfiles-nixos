@@ -18,14 +18,6 @@ cd /home/.config/nixos
 nixos-rebuild switch --flake .#gabrln
 ```
 
-### Atualizar
-
-```bash
-cd /home/.config/nixos
-git pull origin experimental
-nixos-rebuild switch --flake .#gabrln
-```
-
 > O repositório é clonado em `/home/.config/nixos` (fora do home do usuário) — certifique-se de que o path existe e tem permissões corretas.
 
 ## Estrutura
@@ -67,11 +59,8 @@ nixos-rebuild switch --flake .#gabrln
 | Camada | Ferramenta |
 |--------|-----------|
 | Compositor | MangoWM |
-| Shell/DE | Noctalia V5 |
+| Shell | Noctalia V5 |
 | Terminal | Kitty |
-| Editor | Neovim (nixvim) |
 | File Manager | Yazi |
 | Multiplexer | Zellij |
 | Prompt | Starship |
-| Theme | Noctalia (Catppuccin builtin) |
-| GTK | adw-gtk3-dark + Papirus-Dark |
