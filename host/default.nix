@@ -38,5 +38,5 @@
   programs.xwayland.enable = true;
 
   # System state version
-  system.stateVersion = "24.05";
+  system.stateVersion = "26.05";
 }
