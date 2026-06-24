@@ -41,13 +41,6 @@ cd ~/.config/nixos
 git remote set-url origin git@github.com:gabrln/Nix-gabrln.git
 ```
 
-### Obsidian Vault
-
-```bash
-# Clonar vault (diretório criado automaticamente pelo NixOS config)
-git clone https://github.com/gabrln/obsidian-vault.git ~/Documents/obsidian
-```
-
 ## Structure
 
 ```
