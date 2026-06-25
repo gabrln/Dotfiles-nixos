@@ -109,4 +109,12 @@ in {
   };
 
   programs.neovim.enable = false;
+
+  xdg.configFile."nvim/init.lua".source =
+    config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/.config/nixos/modules/home/dotfiles/nvim/nixcats/init.lua";
+
+  xdg.configFile."nvim/lua".source =
+    config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/.config/nixos/modules/home/dotfiles/nvim/nixcats/lua";
 }
