@@ -31,13 +31,13 @@
 
     nix-gaming.url = "github:fufexan/nix-gaming";
 
-    nixCats = {
-      url = "github:BirdeeHub/nixCats-nvim";
+    nvf = {
+      url = "github:NotAShelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, mango, noctalia, noctalia-greeter, chaotic, nix-gaming, nixCats, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, mango, noctalia, noctalia-greeter, chaotic, nix-gaming, nvf, ... }@inputs:
     let
       system = "x86_64-linux";
       vars = import ./vars.nix;

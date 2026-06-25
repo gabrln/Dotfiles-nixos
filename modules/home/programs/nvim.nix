@@ -1,8 +1,5 @@
 { config, pkgs, lib, inputs, ... }:
 let
-  nixCats = inputs.nixCats;
-  utils = nixCats.utils;
-
   base16-nvim = pkgs.vimUtils.buildVimPlugin {
     pname = "base16-nvim";
     version = "2024-01-01";
@@ -14,107 +11,186 @@ let
     };
   };
 in {
-  imports = [ nixCats.homeModule ];
+  imports = [ inputs.nvf.homeManagerModules.default ];
 
-  nixCats = {
+  programs.nvf = {
     enable = true;
-    addOverlays = [ (utils.standardPluginOverlay inputs) ];
-    packageNames = [ "nvim" ];
-    luaPath = ../dotfiles/nvim/nixcats;
 
-    categoryDefinitions.replace = ({ pkgs, ... }: {
-      lspsAndRuntimeDeps = {
-        general = [
-          pkgs.ripgrep
-          pkgs.fd
-        ];
-        nix = [
-          pkgs.nil
-          pkgs.nixd
-        ];
-        lua = [
-          pkgs.lua-language-server
-        ];
-        bash = [
-          pkgs.bash-language-server
-        ];
-      };
+    settings = {
+      vim = {
+        viAlias = true;
+        vimAlias = true;
 
-      startupPlugins = {
-        general = [
-          pkgs.vimPlugins.vim-sleuth
-          pkgs.vimPlugins.lazy-nvim
-          pkgs.vimPlugins.nvim-web-devicons
-          pkgs.vimPlugins.plenary-nvim
-          pkgs.vimPlugins.tokyonight-nvim
-          base16-nvim
-        ];
-      };
-
-      optionalPlugins = {
-        general = [
-          pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-          pkgs.vimPlugins.nvim-lspconfig
-          pkgs.vimPlugins.nvim-cmp
-          pkgs.vimPlugins.cmp-nvim-lsp
-          pkgs.vimPlugins.cmp-buffer
-          pkgs.vimPlugins.cmp-path
-          pkgs.vimPlugins.luasnip
-          pkgs.vimPlugins.telescope-nvim
-          pkgs.vimPlugins.telescope-fzf-native-nvim
-          pkgs.vimPlugins.which-key-nvim
-          pkgs.vimPlugins.gitsigns-nvim
-          pkgs.vimPlugins.conform-nvim
-          pkgs.vimPlugins.noice-nvim
-          pkgs.vimPlugins.nui-nvim
-          pkgs.vimPlugins.todo-comments-nvim
-        ];
-        ui = [
-          pkgs.vimPlugins.lualine-nvim
-          pkgs.vimPlugins.bufferline-nvim
-          pkgs.vimPlugins.indent-blankline-nvim
-        ];
-        git = [
-          pkgs.vimPlugins.lazygit-nvim
-        ];
-        code = [
-          pkgs.vimPlugins.oil-nvim
-          pkgs.vimPlugins.neogen
-        ];
-      };
-    });
-
-    packageDefinitions.replace = {
-      nvim = { pkgs, name, ... }: {
-        settings = {
-          suffix-path = true;
-          suffix-LD = true;
-          wrapRc = false;
-          configDirName = "nvim";
-          aliases = [ "vim" "vi" ];
-          hosts.python3.enable = true;
-          hosts.node.enable = true;
+        options = {
+          number = true;
+          relativenumber = true;
+          termguicolors = true;
+          signcolumn = "yes";
+          cursorline = true;
+          scrolloff = 8;
+          sidescrolloff = 8;
+          wrap = false;
+          tabstop = 2;
+          shiftwidth = 2;
+          expandtab = true;
+          smartindent = true;
+          ignorecase = true;
+          smartcase = true;
+          splitright = true;
+          splitbelow = true;
+          undofile = true;
+          swapfile = false;
+          backup = false;
+          clipboard = "unnamedplus";
+          completeopt = "menu,menuone,noselect";
         };
-        categories = {
-          general = true;
-          nix = true;
-          lua = true;
-          bash = true;
-          ui = true;
-          git = true;
-          code = true;
+
+        globals = {
+          mapleader = " ";
+          maplocalleader = "\\";
+        };
+
+        lsp = {
+          enable = true;
+          servers = {
+            nil_ls.enable = true;
+            bashls.enable = true;
+            lua_ls.enable = true;
+          };
+        };
+
+        languages = {
+          enableFormat = true;
+          enableTreesitter = true;
+          nix.enable = true;
+          bash.enable = true;
+          lua.enable = true;
+        };
+
+        git = {
+          enable = true;
+          gitsigns.enable = true;
+        };
+
+        ui = {
+          noice.enable = true;
+          colorizer.enable = true;
+        };
+
+        statusline.lualine.enable = true;
+
+        treesitter.enable = true;
+
+        telescope.enable = true;
+
+        utility.motion.flash-nvim.enable = true;
+
+        binds = {
+          whichKey.enable = true;
+          cheatsheet.enable = true;
+        };
+
+        autopairs.nvim-autopairs.enable = true;
+
+        comments.comment-nvim.enable = true;
+
+        filetree.neo-tree.enable = true;
+
+        tabline.nvimBufferline.enable = true;
+
+        extraPlugins = {
+          base16-nvim = {
+            package = base16-nvim;
+          };
+          oil = {
+            package = pkgs.vimPlugins.oil-nvim;
+            setup = "require('oil').setup{}";
+          };
+          neogen = {
+            package = pkgs.vimPlugins.neogen;
+            setup = "require('neogen').setup{}";
+          };
+          todo-comments = {
+            package = pkgs.vimPlugins.todo-comments-nvim;
+            setup = "require('todo-comments').setup{}";
+          };
+          which-key = {
+            package = pkgs.vimPlugins.which-key-nvim;
+            setup = "require('which-key').setup{}";
+          };
+        };
+
+        keymaps = [
+          {
+            key = "<leader>e";
+            mode = "n";
+            silent = true;
+            action = "<cmd>Oil<CR>";
+            desc = "Open Oil file explorer";
+          }
+          {
+            key = "<leader>ff";
+            mode = "n";
+            silent = true;
+            action = "<cmd>Telescope find_files<CR>";
+            desc = "Find files";
+          }
+          {
+            key = "<leader>fg";
+            mode = "n";
+            silent = true;
+            action = "<cmd>Telescope live_grep<CR>";
+            desc = "Live grep";
+          }
+          {
+            key = "<leader>fb";
+            mode = "n";
+            silent = true;
+            action = "<cmd>Telescope buffers<CR>";
+            desc = "Find buffers";
+          }
+          {
+            key = "<leader>fh";
+            mode = "n";
+            silent = true;
+            action = "<cmd>Telescope help_tags<CR>";
+            desc = "Help tags";
+          }
+        ];
+
+        autocmds = [
+          {
+            event = [ "TextYankPost" ];
+            callback = lib.generators.mkLuaInline "function() vim.highlight.on_yank() end";
+          }
+        ];
+
+        additionalRuntimePaths = [
+          "${config.home.homeDirectory}/.config/nvim"
+        ];
+
+        luaConfigRC = {
+          matugen-setup = ''
+            local function safe_require(name)
+              local ok, module = pcall(require, name)
+              return ok and module or nil
+            end
+
+            local matugen = safe_require('matugen')
+            if matugen then
+              matugen.setup()
+            end
+
+            local signal = vim.uv.new_signal()
+            signal:start('sigusr1', vim.schedule_wrap(function()
+              package.loaded['matugen'] = nil
+              require('matugen').setup()
+            end))
+          '';
         };
       };
     };
   };
 
   programs.neovim.enable = false;
-
-  xdg.configFile."nvim/init.lua".source =
-    config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/.config/nixos/modules/home/dotfiles/nvim/nixcats/init.lua";
-
-  xdg.configFile."nvim/lua".source =
-    config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/.config/nixos/modules/home/dotfiles/nvim/nixcats/lua";
 }
