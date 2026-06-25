@@ -30,9 +30,14 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     nix-gaming.url = "github:fufexan/nix-gaming";
+
+    nixCats = {
+      url = "github:BirdeeHub/nixCats-nvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, mango, noctalia, noctalia-greeter, chaotic, nix-gaming, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, mango, noctalia, noctalia-greeter, chaotic, nix-gaming, nixCats, ... }@inputs:
     let
       system = "x86_64-linux";
       vars = import ./vars.nix;
