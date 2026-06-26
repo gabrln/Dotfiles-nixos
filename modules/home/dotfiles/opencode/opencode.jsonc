@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["/home/gabrln/Documents/obsidian/C04 Agent/Agent Workflow.md"],
+  "mcp": {
+    "nixos": {
+      "type": "local",
+      "command": ["mcp-nixos"],
+      "enabled": true
+    }
+  }
+}
