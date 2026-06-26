@@ -10,6 +10,12 @@
     "vm.watermark_scale_factor" = 125;
     # Prevent aggressive swap pre-allocation (ZRAM optimization)
     "vm.page-cluster" = 0;
+    # Kernel hardening: restrict kernel pointer visibility (only root)
+    "kernel.kptr_restrict" = 2;
+    # Kernel hardening: restrict dmesg access (only root)
+    "kernel.dmesg_restrict" = 1;
+    # Kernel hardening: reduce kernel log noise on console (only errors)
+    "kernel.printk" = "3 3 3 3";
   };
 
   # Load the i2c-dev driver to allow brightness control via ddcutil
