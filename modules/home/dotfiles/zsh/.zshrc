@@ -154,5 +154,6 @@ alias nxd="nix develop"
 # =========================================================
 # Environment Variables
 # =========================================================
+export LC_MESSAGES=en_US.UTF-8
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export FUNCNEST=100
