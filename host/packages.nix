@@ -46,6 +46,7 @@
     p7zip
     unrar
     podman-compose
+    pods
 
     # Gaming
     mangohud
