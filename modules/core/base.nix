@@ -82,6 +82,9 @@
   # nix-ld: allows running dynamically linked binaries (Mason, treesitter parsers, etc.)
   programs.nix-ld.enable = true;
 
+  # nix-index: database + command-not-found for missing commands
+  programs.nix-index.enable = true;
+
   # Firewall
   networking.firewall.enable = true;
 

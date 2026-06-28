@@ -62,6 +62,7 @@
     iotop
     nethogs
     powertop
+    nh
   ];
 
   # Steam expansions
