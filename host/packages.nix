@@ -78,6 +78,7 @@
   environment.sessionVariables = {
     QT_QPA_PLATFORMTHEME = "qt6ct";
     NIXOS_OZONE_WL = "1";
+    MOZ_ENABLE_WAYLAND = "1";
     VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
     # VkBasalt (Contrast Adaptive Sharpening)
     VK_LAYER_PATH = "${pkgs.vkbasalt}/share/vulkan/implicit_layer.d";
