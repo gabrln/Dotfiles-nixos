@@ -1,3 +1,8 @@
 # Ignore generated runtime files created by Noctalia through the Neovim template
 /modules/home/dotfiles/nvim/lua/matugen.lua
 result
+
+# Agent context moved to obsidian vault (C04 Agent/)
+AGENTS.md
+.opencode/agents/
+.opencode/skills/
