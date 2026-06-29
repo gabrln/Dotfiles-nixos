@@ -7,7 +7,7 @@ Configuração NixOS com **MangoWM** e **Noctalia V5**.
 | Branch | Uso |
 |--------|-----|
 | `experimental` | Desenvolvimento ativo, kernel NixOS padrão |
-| `main` | Espelho do `experimental` (estável/produção) |
+| `main` | Espelho do `experimental` (estável) |
 
 ## Instalação
 
