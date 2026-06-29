@@ -1,38 +1,31 @@
 # Nix-gabrln
 
-NixOS config with **MangoWM**, **Noctalia V5**.
+Configuração NixOS com **MangoWM** e **Noctalia V5**.
 
 ## Branches
 
-| Branch | Use Case |
-|--------|----------|
-| `experimental` | Desenvolvimento, kernel NixOS padrão, BORE scheduler |
+| Branch | Uso |
+|--------|-----|
+| `experimental` | Desenvolvimento ativo, kernel NixOS padrão |
 | `main` | Espelho do `experimental` (estável/produção) |
 
-```bash
-# Instalação
-git clone https://github.com/gabrln/Nix-gabrln.git ~/.config/nixos
-cd ~/.config/nixos
-sudo nixos-rebuild switch --flake .
-```
+## Instalação
 
-## Installation
-
-> **No Git?** Use `nix-shell -p git` to get a temporary git without installing it system-wide.
+> **Sem Git?** Use `nix-shell -p git` para um git temporário.
 
 ```bash
-# 1. Clone (HTTPS — no SSH key needed yet)
+# 1. Clonar (HTTPS — sem chave SSH)
 git clone https://github.com/gabrln/Nix-gabrln.git ~/.config/nixos
 
-# 2. Copy hardware config from the installer
+# 2. Copiar hardware-config do instalador
 cp /etc/nixos/hardware-configuration.nix ~/.config/nixos/host/hardware-configuration.nix
 
 # 3. Build
 cd ~/.config/nixos
-nixos-rebuild switch --flake .#gabrln
+sudo nixos-rebuild switch --flake .#gabrln
 ```
 
-### SSH Key (opcional, para push)
+### Chave SSH (opcional, para push)
 
 ```bash
 # Gerar chave SSH (se não existir)
@@ -57,15 +50,15 @@ git remote set-url origin git@github.com:gabrln/Nix-gabrln.git
 
 ## Stack
 
-| Layer | Tool |
-|--------|-----------|
-| Kernel | Standard NixOS (BORE) |
+| Camada | Ferramenta |
+|--------|------------|
+| Kernel | NixOS padrão (`linuxPackages`) |
 | Compositor | MangoWM |
 | Shell | Noctalia V5 |
-| Audio | PipeWire (explicit low-latency config) |
-| Gaming | Gamemode, MangoHud, Steam + Gamescope |
+| Áudio | PipeWire (config explícita de baixa latência) |
+| Gaming | GameMode, MangoHud, Steam + Gamescope |
 | Terminal | Kitty |
 | Editor | Neovim (nvf) |
-| File Manager | Yazi + Nautilus |
-| Multiplexer | Zellij |
-| Prompt | Starship (Noctalia themed) |
+| Gerenciador de Arquivos | Yazi + Nautilus |
+| Multiplexador | Zellij |
+| Prompt | Starship (tematizado pelo Noctalia) |
