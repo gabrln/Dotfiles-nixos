@@ -12,6 +12,57 @@
   "agent": {
     "build": {
       "model": "opencode-go/minimax-m2.7",
+      "description": "Orquestrador de pipeline. Executa o workflow completo baseado no Tier. Delegates para subagents.",
+      "permission": {
+        "edit": "allow",
+        "write": "allow",
+        "bash": {
+          "nix flake *": "allow",
+          "*": "allow"
+        },
+        "task": {
+          "spec": "allow",
+          "design": "allow",
+          "design-review": "allow",
+          "apply": "allow",
+          "verify": "allow",
+          "vault-docs": "allow",
+          "git-specialist": "allow",
+          "*": "deny"
+        }
+      }
+    },
+    "plan": {
+      "model": "opencode-go/deepseek-v4-flash",
+      "description": "Agente de roteamento. Recebe request, classifica Tier, delega para @general. Não executa nada diretamente.",
+      "permission": {
+        "edit": "deny",
+        "write": "deny",
+        "bash": "deny",
+        "task": {
+          "general": "allow",
+          "*": "deny"
+        }
+      }
+    },
+    "explore": {
+      "model": "opencode-go/deepseek-v4-flash",
+      "description": "Exploração de código. Usado para grep, glob, leitura sem modificação.",
+      "permission": {
+        "edit": "deny",
+        "write": "deny",
+        "bash": {
+          "git log *": "allow",
+          "git diff *": "allow",
+          "git show *": "allow",
+          "*": "deny"
+        },
+        "task": "deny"
+      }
+    },
+    "general": {
+      "model": "opencode-go/deepseek-v4-flash",
+      "description": "Orquestrador principal. Classifica Tier e delega para subagents. NUNCA edita arquivos diretamente.",
       "permission": {
         "edit": "deny",
         "write": "deny",
@@ -30,15 +81,6 @@
           "*": "deny"
         }
       }
-    },
-    "plan": {
-      "model": "opencode-go/deepseek-v4-flash"
-    },
-    "explore": {
-      "model": "opencode-go/deepseek-v4-flash"
-    },
-    "general": {
-      "model": "opencode-go/deepseek-v4-flash"
     }
   },
   "command": {
