@@ -21,10 +21,6 @@
     DefaultTimeoutStopSec = "10s";
   };
 
-  # Firewall: default-deny (whitelist). Steam ports opened via programs.steam.openFirewall
-  # - remotePlay: ports 27036/udp, 27037/tcp
-  # - dedicatedServer: ports 27015/udp, 27016/tcp
-
   # Hardware & Services required by Noctalia / Wayland
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = false;

@@ -1,6 +1,6 @@
 # Nix-gabrln
 
-Configuração NixOS com **MangoWM** e **Noctalia V5**.
+Configuração NixOS com **MangoWM** e **Noctalia**.
 
 ## Branches
 
@@ -54,7 +54,7 @@ git remote set-url origin git@github.com:gabrln/Nix-gabrln.git
 |--------|------------|
 | Kernel | NixOS padrão (`linuxPackages`) |
 | Compositor | MangoWM |
-| Shell | Noctalia V5 |
+| Shell | Noctalia |
 | Áudio | PipeWire (config explícita de baixa latência) |
 | Gaming | GameMode, MangoHud, Steam + Gamescope |
 | Terminal | Kitty |
